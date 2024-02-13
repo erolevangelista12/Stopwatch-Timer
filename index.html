@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #87ceeb;
+    }
+
+    #container {
+      border: 3px solid black;
+      border-radius: 20px;
+      padding: 20px;
+      background-color: #f4f2e5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #timer {
+      font-size: 3.5em;
+      margin-bottom: 15px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+    }
+
+    button {
+      color: #fff;
+      font-size: 1.3em;
+      font-weight: bold;
+      margin: 5px;
+      padding: 10px 20px;
+      background-color: #FF0000;
+      border: 2px solid;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+  </style>
+  <title>Stopwatch Timer</title>
+</head>
+<body>
+
+<div id="container">
+  <h1>Stopwatch Timer</h1>
+  <div id="timer">00:00:00.00</div>
+  <div class="button-container">
+    <button onclick="startPause()">Start</button>
+    <button style="display: none;" onclick="reset()">Reset</button>
+  </div>
+</div>
+
+<script>
+  let timerInterval;
+  let milliseconds = 0;
+
+  function startPause() {
+    const startButton = document.querySelector('button');
+    const resetButton = document.querySelectorAll('button')[1];
+
+    if (startButton.textContent === 'Start') {
+      startButton.textContent = 'Pause';
+      resetButton.style.display = 'inline-block';
+      timerInterval = setInterval(updateTimer, 10);
+    } else if (startButton.textContent === 'Pause') {
+      startButton.textContent = 'Continue';
+      clearInterval(timerInterval);
+    } else if (startButton.textContent === 'Continue') {
+      startButton.textContent = 'Pause';
+      timerInterval = setInterval(updateTimer, 10);
+    }
+  }
+
+  function updateTimer() {
+    milliseconds += 10;
+    const hours = Math.floor(milliseconds / 3600000);
+    const minutes = Math.floor((milliseconds % 3600000) / 60000);
+    const seconds = Math.floor((milliseconds % 60000) / 1000);
+    const remainingMilliseconds = (milliseconds % 1000).toString().padStart(3, '0').substring(0, 2);
+
+    document.getElementById('timer').textContent = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}.${remainingMilliseconds}`;
+  }
+
+  function reset() {
+    const startButton = document.querySelector('button');
+    const resetButton = document.querySelectorAll('button')[1];
+    clearInterval(timerInterval);
+    milliseconds = 0;
+    document.getElementById('timer').textContent = '00:00:00.00';
+    startButton.textContent = 'Start';
+    resetButton.style.display = 'none';
+  }
+
+  function formatTime(time) {
+    return time < 10 ? `0${time}` : time;
+  }
+</script>
+
+</body>
+</html>
